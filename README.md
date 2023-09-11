@@ -6,10 +6,6 @@ Print out messages recieved via a webhook on a connected ESC/POS compatible prin
 
 [python-escpos](https://python-escpos.readthedocs.io/en/latest/) - to communicate with ESC/POS compatible printers
 
-## Tested On
-Pipsta - a rebadged Able Systems ap1400 designed for rasperry pis
-Used it with another printer? Make an issue or a pull request!
-
 ## Setup
 1. Download app.py or clone the repository
 2. Install the required python modules from pip: `flask` and `python-escpos`
@@ -36,3 +32,6 @@ Cache-Control: no-cache
     "msg": "hi"
 }
 ```
+## Tested On
+Pipsta - a rebadged Able Systems ap1400 designed for rasperry pis
+Used it with another printer? Make an issue or a pull request!
