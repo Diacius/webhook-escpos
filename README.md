@@ -1,5 +1,5 @@
 # webhook-escpos
-Print out messages recieved via a webhook on a connected ESC/POS compatible printer - which are usually thermal receipt printers
+Print out messages recieved via HTTP POST (webhook) on a connected ESC/POS compatible printer - which are usually thermal receipt printers.
 
 ## Requirements
 [Flask](https://flask.palletsprojects.com/en) - to recieve webhook requests
