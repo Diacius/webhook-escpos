@@ -11,6 +11,10 @@ Print out messages recieved via HTTP POST (webhook) on a connected ESC/POS compa
 2. Install the required python modules from pip: `flask` and `python-escpos`
 3. Change the USB vendor and product IDs at the top of the code so that the program can connect to the printer **if your printer uses serial than you will need to change part of the code - instructions are in a seperate file**
 
+## Use Cases
+This works with Uptime Kuma, and can be setup as a notification, so your printer can print out status reports.
+
+
 ## Running
 You _can_ run it with the flask development server like this and it will work fine, but you probably shouldn't do this for production:
 `python3 -m flask run -h **your.devices.ip.address**` (you need to include -h to allow requests from your local network)
