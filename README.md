@@ -33,5 +33,6 @@ Cache-Control: no-cache
 }
 ```
 ## Tested On
-Pipsta - a rebadged Able Systems ap1400 designed for rasperry pis
+Pipsta - a rebadged Able Systems ap1400 designed for Raspberry Pis
+
 Used it with another printer? Make an issue or a pull request!
