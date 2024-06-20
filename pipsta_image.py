@@ -47,7 +47,6 @@ def pipsta_image(imageBytes):
     # Create array to store the data that needs to be sent to the printer
     dataArray = []
     # Tell the printer to start spooling, so that processing does not cause the image to have gaps
-    dataArray.append(ENTER_SPOOLING)
     # For each line
     for i in range(number_of_lines):
         # Build the data to send to the printer from:
@@ -56,15 +55,12 @@ def pipsta_image(imageBytes):
         # in chunks for each line (usually 48 bytes)
         construct = DOTHEADER + imgbytes[i*BYTES_PER_DOT_LINE:(BYTES_PER_DOT_LINE*i)+BYTES_PER_DOT_LINE]
         # Send the built data to the printer as raw bytes using escpos' IO tools
-        dataArray.append()
+        dataArray.append(construct)
         # TODO: A hardcoded sleep isn't paticularly sensible, the library supports reading the output
         # So lets work out how to wait until the data is processed correctly :)
         sleep(0.01)
-    # Feed to the tear bar :)
-    usb.text('\n\n\n\n')
+    # Feed once  :)
+    dataArray.append('\n')
     # Exit spooling mode which will print the buffer
-    usb._raw(EXIT_SPOOLING)
-    usb.close()
-# Demo with the testimage if the file is run individually :)        
-if __name__ == '__main__':
-    pipsta_image(usbproduct=USB_product, usbvendor=USB_vendor, filename='testimg.png')
+    return dataArray
+# Demo with the testimage if the file is run individually :) TODO: Make this work with new format       
