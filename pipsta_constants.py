@@ -104,5 +104,6 @@ def barcode(type:str,data:bytes):
             alphanumeric = True
             numeric = False
     dataBytes = b''
-    command = GS + b'k' + numericType + data + terminator
+    dataBytes = data.encode("ASCII")
+    command = GS + b'\x6B' + numericType + dataBytes + terminator
     return command
