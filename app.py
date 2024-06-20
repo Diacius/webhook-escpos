@@ -53,6 +53,8 @@ def print_multipart(jsonObject, printerObject:Usb):
                 printerObject._raw(pipsta_constants.underline(False))
                 print(f"Text printing {partData["text"]}")
                 printerObject.text(partData["text"] + "\n")
+        if partData["type"] == "barcode":
+            pipsta_constants.barcode(partData["barcode-type"], partData["code"])
     printerObject._raw(pipsta_constants.EXIT_SPOOLING)    
   
 @app.route('/', methods=['GET'])

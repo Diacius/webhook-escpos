@@ -1,7 +1,7 @@
 from escpos import constants, codepages, exceptions
 
 ESC = b'\x1B'
-
+GS = b'\x1D'
 
 '''
 Initialise
@@ -47,3 +47,62 @@ def invertedPrinting(toggle:bool):
         return ESC + b'{'+b'\xFF' 
     else:
         return ESC + b'{'+b'\x00'
+    
+'''
+Barcode:
+'''
+def barcode(type:str,data:bytes):
+    match type:
+        case "UPC-A":
+            numericType = b'\x00'
+            terminator = b'\x00'
+            alphanumeric = False
+            numeric = True
+        case "UPC-E":
+            numericType = b'\x01'
+            terminator = b'\x00'
+            alphanumeric = False
+            numeric = True
+        case "EAN-13":
+            numericType = b'\x02'
+            terminator = b'\x00'
+            alphanumeric = False
+            numeric = True
+        case "EAN-8":
+            numericType = b'\x03'
+            terminator = b'\x00'
+            alphanumeric = False
+            numeric = True
+        case "Code 39":
+            numericType = b'\x04'
+            terminator = b'\x00'
+            alphanumeric = True
+            numeric = False
+        case "Int2 of 5":
+            numericType = b'\x05'
+            terminator = b'\x00'
+            alphanumeric = False
+            numeric = True
+        case "Code 128A":
+            numericType = b'\x06'
+            terminator = b'\xFF'
+            alphanumeric = True
+            numeric = False
+        case "Code 128B":
+            numericType = b'\x07'
+            terminator = b'\xFF'
+            alphanumeric = True
+            numeric = False
+        case "Code 128C":
+            numericType = b'\x08'
+            terminator = b'\xFF'
+            alphanumeric = False
+            numeric = True
+        case "Code 93":
+            numericType = b'\x09'
+            terminator = b'\xFF'
+            alphanumeric = True
+            numeric = False
+    dataBytes = b''
+    command = GS + b'k' + numericType + data + terminator
+    return command
