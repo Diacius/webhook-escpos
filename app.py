@@ -17,6 +17,7 @@ pipsta = True
 
 from escpos.printer import Usb
 from flask import Flask, request, Response
+from flask_cors import CORS
 import time
 import pipsta_image, pipsta_constants
 import base64
@@ -30,6 +31,7 @@ usb._raw(pipsta_constants.underline(False))
 usb.close()
 
 app = Flask(__name__)
+CORS(app)
 def print_multipart(jsonObject, printerObject:Usb):
     printerObject._raw(pipsta_constants.ENTER_SPOOLING)
     if jsonObject["parts"]:
@@ -51,21 +53,21 @@ def print_multipart(jsonObject, printerObject:Usb):
                 # Assume that standard printing works
                 file = io.BytesIO(base64.b64decode(partData["imagedata"]))
                 printerObject.image(Image.open(file))
-        if partData["type"] == "text":
+        elif partData["type"] == "text":
             if partData["formatting"] == True:
-                if partData['underlined']:
+                if partData['underlined'] == True:
+                    print("underlining")
                     printerObject._raw(pipsta_constants.underline(True))
-                if partData['inverted']:
+                if partData['inverted'] == True:
+                    print("Inverting")
                     printerObject._raw(pipsta_constants.invertedPrinting(True))
-                printerObject.text(partData['text'] + "\n")
-                printerObject._raw(pipsta_constants.invertedPrinting(False))
-                printerObject._raw(pipsta_constants.underline(False))
+                printerObject._raw(partData['text'] + "\n")
             else:
                 printerObject._raw(pipsta_constants.invertedPrinting(False))
                 printerObject._raw(pipsta_constants.underline(False))
                 print(f"Text printing {partData["text"]}")
                 printerObject.text(partData["text"] + "\n")
-        if partData["type"] == "barcode":
+        elif partData["type"] == "barcode":
             if pipsta == True:
                 printerObject._raw(pipsta_constants.barcode(partData["barcode-type"], partData["code"]))
             else:

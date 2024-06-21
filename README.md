@@ -20,6 +20,7 @@ You _can_ run it with the flask development server like this and it will work fi
 `python3 -m flask run -h **your.devices.ip.address**` (you need to include -h to allow requests from your local network)
 
 Allowing access to the internet is **not recommended**, my code isn't perfect and the flask development shouldn't be used in production!
+Furthermore, CORS is currently enabled for all connections to the API, you will want to change thsi before using the API, you have been warned!
 
 ## Printer support
 
