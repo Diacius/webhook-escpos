@@ -7,6 +7,6 @@ Referring to this page for the escpos-python module documentation will help you 
 If this guidance is not enough and you're still not sure what to do, the documentation above goes into more depth, simply replace each `printer = Usb()` with the correct details for your prinnter
 ## USB
 1. Find your devices vendor and product ids using `lsusb`
-2. Edit 2 sections in the code where the `Usb()` function is called with your devices product IDs. If lsusb says `1234:5678`, then
+2. Edit 2 variables at the top of the file `USB_vendor`, and `USB_product`. If lsusb says the device is `1234:5678`, then `USB_vendor` is `1234` and `USB_product` is `5678`
 ## Serial
 ## Network
