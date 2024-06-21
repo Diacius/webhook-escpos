@@ -26,7 +26,7 @@ if n is 0 then underline is off; otherwise on
 def underline(toggle:bool):
     UNDERLINE = b'\x1B\x2D' # Add n byte afterwards
     #If the parameter is True then turn on underline, otherwise turn it off
-    if bool:
+    if bool == True:
         return UNDERLINE + b'\xFF'
     else:
         return UNDERLINE + b'\x00'
@@ -43,7 +43,7 @@ Inverted Printing: ESC,"{",n
 where n is a byte where bit 1 encodes for on/off
 '''
 def invertedPrinting(toggle:bool):
-    if bool:
+    if bool == True:
         return ESC + b'{'+b'\xFF' 
     else:
         return ESC + b'{'+b'\x00'
@@ -51,7 +51,7 @@ def invertedPrinting(toggle:bool):
 '''
 Barcode:
 '''
-def barcode(type:str,data:bytes):
+def barcode(type:str,data:str):
     match type:
         case "UPC-A":
             numericType = b'\x00'
@@ -74,6 +74,7 @@ def barcode(type:str,data:bytes):
             alphanumeric = False
             numeric = True
         case "Code 39":
+            print("code39")
             numericType = b'\x04'
             terminator = b'\x00'
             alphanumeric = True
@@ -103,6 +104,7 @@ def barcode(type:str,data:bytes):
             terminator = b'\xFF'
             alphanumeric = True
             numeric = False
+    print(type)
     dataBytes = b''
     dataBytes = data.encode("ASCII")
     command = GS + b'\x6B' + numericType + dataBytes + terminator
