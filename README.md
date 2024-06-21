@@ -38,11 +38,12 @@ Cache-Control: no-cache
 ```
 ## Multipart messages
 
-**_This feature is a WORK IN PROGRESS, the format of multipart messages is very likely to change for the time being_**
+**_ Multipart me_**
 Multipart messages are a new feature being actively developed, an example JSON payload is this:
 ```json
 {
     "multipart": true,
+    "api_version": 1,
     "parts": ["image1", "text1", "text2", "barcode1"],
     "image1": {"type": "image", "rawdata": "iVBORw0KGgoAAAANSUhEUgAAAYAAAAA/AQMAAADT4o3oAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAGUExURQAAAP///6XZn90AAAAJcEhZcwAADsMAAA7DAcdvqGQAAAORSURBVEjH5Za9btRAEMfHcaJDCZJzEoh0puYJKKI4hREvEGpegQaJIopX4kVSokuRR7jlHUBpV6ILjZGIOEU+D/Ox693zXRIQJatEsTf739/Mf/bDgNgCvMV72w0iNFf6TIJzgD16ms03j+4v0TUIVR4EHQAjvkAxjHnVJILjDE2FcAZBsGDB7sxEwTVUCQCABD0cQeMFLfg2CREDlPgrCCiAfXqHw3WBD5JzKvFbIgAQQnUHgUeUaFYFHZxS52YB51SMBM19hFYI0KwIOsqBCFeDS2yUr4PjECKBXKLsehKQi7nUoa5rLUVdc8UtwHYTCSjsDg5I0INUmmYxu7NLsl8qboU1EHDGKamgCwK0FP9SMWjEjkhAM20k7gml13hBW6g7HKfZk1HDeLSV/jMnQSC0E4kdIKMe8Tsh2FKty8mPQFjwzOIVDa1GBKf4RyxICL2aG/xZJxxkFERC8IKq1551wktatSmBurapHqUXJAQWEOEUEgK5tICtOS1UJfSzMeEx9COCg2c8ka4iBwmh5Ry2sx4aGAg0iZMn3oyVCC74dTYLhOKCBAmhQJst1RGuA9fkpD6hnJ406CZaKCK8x0gwhZtLVU0ZaiKt9ASmc5wQrIbSUplptPEE3wqZXQiJgAhQWd4G9FOMBYFwBIh9JDQWdhqKwE5WBLRGPcFSJch9JVC9SAAvCMKm3H5KCIuU4FYIspZ4Mt0cI4I5zG6egidwgZ2u1lbOJ3POb1ufKMZIyBxAIPT++NDJyIxTKsPJa6wVqTlkFlLCrZHXRT5arZGQ20hAKsK+7DgVpGsp5mCCwMgivZXz1ROqTQSzkgPbTxN1mkO1RkhzMGEbzDcRJkkOeRCEoJfTfRWUkZAPOVAIkaBTtv6eMPECW/jEiOCgGHawP/6dP8XtZCUkn8PP43IQ+CmdJ7hNBFoNCUGntEGQrQsO6WRSAltk8hVCCxsJphgEVj8HQg4t1MMdlGlxzBlfdIPA6T3dgv5d6GUxInygbSp9mYyc7lf4Y6p2dTAcTZ1fYDT4XRCAvx547PVcoRBWRxcIFTxPCF0Q+Bbfuuyr5MAnH/1K30fUsyiaz6+e0G8ZJXCfP2autAIpwYa3JW2TigWfqS/DaLdbJSwCgZMTwXcSFIlg1LrauyRfBrpJLB/ueGeb4SCoOl/N5j4B/osApTjxS+ABwU54fvMngsEubQ8LltNp81eCUfsPBYi/AREiYK1CRJO2AAAAAElFTkSuQmCC"},
     "text1": {"type": "text", "formatting": false, "text": "This text is unformatted"},
