@@ -1,3 +1,16 @@
+from escpos.printer import Usb
+from flask import Flask, request, Response
+from flask_cors import CORS
+import time
+import pipsta_image, pipsta_constants
+import base64
+import io
+from PIL import Image
+import json
+
+with open('config.json', 'r') as configFile:
+    configObject = json.load(configFile)
+
 # Change these to the correct values for your device
 # You can find the values on linux using `lsusb`
 USB_vendor = 0x0483
@@ -13,16 +26,7 @@ SET_LED_MODE = b'\x1bX\x2d'
 feed_to_bar = '\n\n\n\n'
 
 # If your printer is not a Pipsta/AP1400 SET THIS VALUE TO FALSE, otherwise image printing will be broken and may print large amounts of garbage.
-pipsta = True
-
-from escpos.printer import Usb
-from flask import Flask, request, Response
-from flask_cors import CORS
-import time
-import pipsta_image, pipsta_constants
-import base64
-import io
-from PIL import Image
+pipsta = configObject["pipsta"]
 
 # Setup a temporary connection to check we can connect to the printer
 usb = Usb(USB_vendor, USB_product, 0, out_ep=0x2)
@@ -31,15 +35,16 @@ usb._raw(pipsta_constants.underline(False))
 usb.close()
 
 app = Flask(__name__)
-CORS(app)
+if configObject["CORS"]:
+    CORS(app)
 def print_multipart(jsonObject, printerObject:Usb):
-    printerObject._raw(pipsta_constants.ENTER_SPOOLING)
     if jsonObject["parts"]:
         parts = jsonObject["parts"]
     for part in parts:
         # Check if the message part is an image or not
         partData = jsonObject[part]
         if partData["type"] == "image":
+            printerObject._raw(pipsta_constants.ENTER_SPOOLING)
             printerObject.hw('INIT') # Ensure that the printer is initialised, in case underline or other formatting is left on.
             #printerObject._raw(SET_FONT_MODE_3) # Set the font to 3, TODO: Is this needed? If so, why?
             # If we are using a pipsta use my code
@@ -53,7 +58,12 @@ def print_multipart(jsonObject, printerObject:Usb):
                 # Assume that standard printing works
                 file = io.BytesIO(base64.b64decode(partData["imagedata"]))
                 printerObject.image(Image.open(file))
+            printerObject._raw(pipsta_constants.EXIT_SPOOLING)
         elif partData["type"] == "text":
+            # Reset formatting
+            printerObject._raw(pipsta_constants.invertedPrinting(False))
+            printerObject._raw(pipsta_constants.underline(False))
+            printerObject._raw(pipsta_constants.ENTER_SPOOLING)
             if partData["formatting"] == True:
                 if partData['underlined'] == True:
                     print("underlining")
@@ -67,12 +77,14 @@ def print_multipart(jsonObject, printerObject:Usb):
                 printerObject._raw(pipsta_constants.underline(False))
                 print(f"Text printing {partData["text"]}")
                 printerObject.text(partData["text"] + "\n")
+            printerObject._raw(pipsta_constants.EXIT_SPOOLING)
         elif partData["type"] == "barcode":
+            printerObject._raw(pipsta_constants.ENTER_SPOOLING)
             if pipsta == True:
                 printerObject._raw(pipsta_constants.barcode(partData["barcode-type"], partData["code"]))
             else:
                 printerObject._hw_barcode(partData["code"], partData["barcode-type"])
-    printerObject._raw(pipsta_constants.EXIT_SPOOLING)    
+            printerObject._raw(pipsta_constants.EXIT_SPOOLING)
   
 @app.route('/', methods=['GET'])
 def root():

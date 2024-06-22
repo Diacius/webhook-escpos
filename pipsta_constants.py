@@ -26,7 +26,7 @@ if n is 0 then underline is off; otherwise on
 def underline(toggle:bool):
     UNDERLINE = b'\x1B\x2D' # Add n byte afterwards
     #If the parameter is True then turn on underline, otherwise turn it off
-    if bool == True:
+    if toggle == True:
         return UNDERLINE + b'\xFF'
     else:
         return UNDERLINE + b'\x00'
@@ -35,15 +35,22 @@ def underline(toggle:bool):
 Print and feed extra paper, final byte is number of 1/20 lines to feed.
 '''
 PRINT_AND_FEED_EXTRA_PAPER = b'\x1B\x4A'
-def printFeedExtra(lines:bytes):
-    return PRINT_AND_FEED_EXTRA_PAPER + lines
+def printFeedExtra(paper:bytes):
+    return PRINT_AND_FEED_EXTRA_PAPER + paper
+
+'''
+Print and feed lines
+'''
+PRINT_AND_FEED_LINES = b'\x1B\x64'
+def printAndFeedLines(lines:bytes):
+    return PRINT_AND_FEED_LINES + lines
 
 '''
 Inverted Printing: ESC,"{",n
 where n is a byte where bit 1 encodes for on/off
 '''
 def invertedPrinting(toggle:bool):
-    if bool == True:
+    if toggle == True:
         return ESC + b'{'+b'\xFF' 
     else:
         return ESC + b'{'+b'\x00'
