@@ -27,6 +27,8 @@ feed_to_bar = '\n\n\n\n'
 
 # If your printer is not a Pipsta/AP1400 SET THIS VALUE TO FALSE, otherwise image printing will be broken and may print large amounts of garbage.
 pipsta = configObject["pipsta"]
+if configObject["pipsta"] == True:
+    print("Pipsta enabled")
 
 # Setup a temporary connection to check we can connect to the printer
 usb = Usb(USB_vendor, USB_product, 0, out_ep=0x2)
@@ -40,16 +42,22 @@ if configObject["CORS"]:
 def print_multipart(jsonObject, printerObject:Usb):
     if jsonObject["parts"]:
         parts = jsonObject["parts"]
+    with open("lastjson.json", "w+t") as lastjson:
+        lastjson.write(str(jsonObject))
+        lastjson.close()
     for part in parts:
         # Check if the message part is an image or not
         partData = jsonObject[part]
         if partData["type"] == "image":
             printerObject._raw(pipsta_constants.ENTER_SPOOLING)
-            printerObject.hw('INIT') # Ensure that the printer is initialised, in case underline or other formatting is left on.
+            printerObject.hw('INIT') 
+            # Ensure that the printer is initialised, in case underline or other formatting is left on.
             #printerObject._raw(SET_FONT_MODE_3) # Set the font to 3, TODO: Is this needed? If so, why?
             # If we are using a pipsta use my code
             if pipsta == True:
                 # Returns an array of raw data to send, one item per command
+                printerObject._raw(pipsta_constants.invertedPrinting(False))
+                printerObject._raw(pipsta_constants.underline(False))
                 dataToSend = pipsta_image.pipsta_image(base64.b64decode(partData["imagedata"]))
                 for command in dataToSend:
                     printerObject._raw(command)
@@ -66,19 +74,18 @@ def print_multipart(jsonObject, printerObject:Usb):
             printerObject._raw(pipsta_constants.ENTER_SPOOLING)
             if partData["formatting"] == True:
                 if partData['underlined'] == True:
-                    print("underlining")
                     printerObject._raw(pipsta_constants.underline(True))
                 if partData['inverted'] == True:
-                    print("Inverting")
                     printerObject._raw(pipsta_constants.invertedPrinting(True))
                 printerObject._raw(partData['text'] + "\n")
             else:
-                printerObject._raw(pipsta_constants.invertedPrinting(False))
-                printerObject._raw(pipsta_constants.underline(False))
+                
                 print(f"Text printing {partData["text"]}")
                 printerObject.text(partData["text"] + "\n")
             printerObject._raw(pipsta_constants.EXIT_SPOOLING)
         elif partData["type"] == "barcode":
+            printerObject._raw(pipsta_constants.invertedPrinting(False))
+            printerObject._raw(pipsta_constants.underline(False))
             printerObject._raw(pipsta_constants.ENTER_SPOOLING)
             if pipsta == True:
                 printerObject._raw(pipsta_constants.barcode(partData["barcode-type"], partData["code"]))
@@ -100,6 +107,7 @@ def respond():
         # Check that an API version was provided
         try:
             post_data["api_version"]
+            
         except KeyError:
             print(f"ERR_NO_API_VER: No API Version specified in API call")
             return Response("ERR_NO_API_VER: Please provide an API version", status=400)
@@ -108,6 +116,7 @@ def respond():
             # function should print each part in order
             print_multipart(post_data, usb)
             usb.text(feed_to_bar)
+            usb._raw(pipsta_constants.EXIT_SPOOLING)
             usb.close()
         else:
             print(f"ERR_API_VER_MISMATCH: Message received was for a different version of this program! This program is compatible with v{API_VERSION}, but the message was v{post_data["api_version"]}")
