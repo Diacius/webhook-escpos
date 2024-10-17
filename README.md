@@ -13,13 +13,13 @@ Print out messages recieved via HTTP POST (webhook) on a connected ESC/POS compa
 
 ## Use Cases
 This works with Uptime Kuma, and can be setup as a notification, so your printer can print out status reports.
-Currently image and barcode printing is limited to the Pipsta/AP1400, this will be fixed soon.
+Currently image and barcode printing is limited to the Pipsta/AP1400, as it uses the Able Systems specific Single Dot Line graphics mode.
 
 ## Running
 You _can_ run it with the flask development server like this and it will work fine, but you probably shouldn't do this for production:
 `python3 -m flask run -h **your.devices.ip.address**` (you need to include -h to allow requests from your local network)
 
-Allowing access to the internet is **not recommended**, my code isn't perfect and the flask development shouldn't be used in production!
+Allowing access to the internet is **not recommended**, my code isn't perfect and the Flask development server shouldn't be used in production!
 
 ## Printer support
 
@@ -68,7 +68,7 @@ The key `multipart`, when set to true, signifies a multipart, if the message is 
 The key `parts` should be a list of all the parts of the message, _in the order you want them printed._
 There should be a key corresponding to every item in the `parts` list.
 
-An image key is made up of two parts `type` which should be set to `image` so that the program so that the correct code is selected, and `image` which should be the raw bytes of the image file, encoded as base64. [Any image file that can be opened by Pillow is supported.](https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html), currently image printing will only work properly with an AP1400
+An image key is made up of two parts `type` which should be set to `image` so that the program so that the correct code is selected, and `image` which should be the raw bytes of the image file, encoded as base64. [Any image file that can be opened by Pillow is supported.](https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html), currently image printing, as far as I know, will only work properly with an AP1400/Pipsta printer. If you want image printing to work with a different printer, you could modify the code to use python-escpos's built in image functions.
 
 A barcode key has the `"type": "barcode"` property and the `barcode-type` property which should be one of:
 - UPC-A
