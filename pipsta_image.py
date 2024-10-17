@@ -1,4 +1,3 @@
-# TODO: Add pipsta image support
 import escpos.printer as printer, escpos.escpos
 from pipsta_constants import ENTER_SPOOLING, EXIT_SPOOLING, ESC
 from PIL import Image
